@@ -1,0 +1,325 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #fafafa;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container-fluid {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+} 
+
+.sidebar {
+  background-color: #ececec;
+  color: #000000;
+  padding: 20px;
+  height: 90vh; /* 90% of the viewport height */
+  width: 50px; /* Fixed width for the sidebar, adjust as needed */
+  flex-shrink: 0; /* Prevents the sidebar from shrinking */
+}
+
+.sidebar h4, .sidebar h5 {
+  margin-bottom: 15px;
+}
+.col-md-3 {
+  flex: 0 0 250px; /* Sidebar width */
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  margin-left: 200px; /* Adjust to sidebar width */
+  margin-right: 200px; /* Adjust to sidebar width */
+}
+
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  background-color: #0381ff; /* Updated color */
+  margin-bottom: 20px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link {
+  color: #343a40;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.content-area {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.table {
+  margin-top: 20px;
+}
+
+#result {
+  max-height: 400px;
+  overflow-y: auto;
+  background-color: #fff;
+  border-radius: 8px; /* Updated border radius */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Updated shadow */
+  padding: 10px; /* Updated padding */
+}
+
+.saved-section {
+  height: calc(100vh - 50px);
+  overflow-y: auto;
+}
+
+.saved-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.saved-section ul li {
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+.loading-spinner {
+  display: none;
+}
+
+/* Container for the Register and Login Forms */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0; /* Matches the dashboard background */
+}
+
+.form-container {
+  width: 100%;
+  max-width: 400px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+/* Form Headings */
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #e5e9ec; /* Matches the sidebar text color */
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 15px;
+}
+
+/* Form Labels */
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #343a40; /* Matches the sidebar text color */
+}
+
+/* Form Inputs */
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Submit Buttons */
+.form-container button[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff; /* Matches the saved section's background */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-container button[type="submit"]:hover {
+  background-color: #0056b3; /* Slightly darker shade for hover */
+}
+
+/* Toggle Links */
+.form-container p {
+  text-align: center;
+  margin-top: 15px;
+  color: #343a40; /* Matches the sidebar text color */
+}
+
+.form-container p a {
+  color: #007bff; /* Matches the sidebar links */
+  text-decoration: none;
+}
+
+.form-container p a:hover {
+  text-decoration: underline;
+}
+
+/* Popup overlay styles */
+.popup-overlay {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.popup-content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 350px;
+  text-align: center;
+}
+
+.popup-content h4 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.popup-content p {
+  margin-bottom: 20px;
+  font-size: 1rem;
+  color: #666;
+}
+
+.popup-content button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 5px;
+  width: 100px;
+}
+
+.popup-content button#loginButton {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.popup-content button#cancelButton {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.popup-content button:hover {
+  opacity: 0.9;
+}
+
+.confirmation-dialog {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.confirmation-dialog-content {
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 300px;
+}
+
+/* Centering the buttons within the form-group */
+#buttons {
+  display: flex;
+  justify-content: center; /* Centers buttons horizontally */
+  gap: 20px; /* Adds space between buttons */
+  margin-top: 20px;
+}
+
+#saveButton {
+  display: block;
+  margin: 0 auto; /* Centering the button */
+  visibility: block;
+}
+/* Ensure the dialog covers the entire viewport */
+.confirmation-dialog {
+  position: fixed; /* Fixes the position relative to the viewport */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none; /* Hide the dialog initially */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  background: rgba(0, 0, 0, 0.5); /* Optional: adds a dark overlay */
+  z-index: 1000; /* Ensures the dialog is above other content */
+}
+
+/* Styling for the dialog content */
+.confirmation-dialog-content {
+  background: #fff; /* White background for the content */
+  padding: 20px;
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Optional: adds a shadow effect */
+  text-align: center; /* Center text inside the content */
+}
+
+/* Optional: style for buttons */
+.btn {
+  margin: 5px;
+}
+
+.btn-danger {
+  background-color: #dc3545; /* Red background for 'Yes, Logout' */
+  color: #fff;
+}
+.confirmation-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000; /* Ensures it's on top of other content */
+  background-color: rgba(0, 0, 0, 0.5); /* Optional: background overlay */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-secondary {
+  background-color: #6c757d; /* Gray background for 'Cancel' */
+  color: #fff;
+}

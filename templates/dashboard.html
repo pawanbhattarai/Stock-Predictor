@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Dashboard</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/styles.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light w-100">
+        <div class="mx-auto order-0">
+          <h1 class="navbar-text text-center mb-0">Stock Predictor</h1>
+        </div>
+        <div class="collapse navbar-collapse justify-content-end order-3">
+          <ul class="navbar-nav ml-auto">
+            <a class="navbar-brand" href="">Home</a>
+            {% if user_logged_in %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Profile</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" id="logoutLink">Logout</a></li>
+            {% else %}
+            <li class="nav-item"><a class="nav-link" href="#" id="loginLink">Log In</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <div class="row">
+      {% if user_logged_in %}
+      <div class="col-md-3 sidebar">
+        <h4>Saved Predictions</h4>
+        <div class="saved-predictions">
+          <!-- Dynamic saved predictions content -->
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="col-md-9 main-content">
+        <form id="predictionForm" method="post">
+          <div class="form-group">
+            <label for="stock_symbol">Stock Symbol:</label>
+            <input type="text" class="form-control" id="stock_symbol" name="stock_symbol" required>
+            <div class="invalid-feedback">Please enter a valid stock symbol.</div>
+          </div>
+          <div class="form-group" id="buttons">
+            <button type="button" class="btn btn-primary" id="predict_3_days">Predict Next 3 Days</button>
+            <button type="button" class="btn btn-primary" id="predict_7_days">Predict Next 7 Days</button>
+          </div>
+        </form>
+        <div class="loading-spinner text-center">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+
+        <div class="result-section mt-3">
+          <div id="result" class="text-center">
+            <table class="table table-bordered">
+              <thead class="fixed-header">
+                <tr>
+                  <th>Trading Day</th>
+                  <th>Prediction</th>
+                  <th id="previousLTPHeader">Previous LTP</th> <!-- Add id to target this column -->
+                </tr>
+              </thead>
+              <tbody id="predictionTable" class="scrollable-data"></tbody>
+            </table>
+          </div>
+          {% if user_logged_in %}
+          <button id="savePredictionButton" type="button" class="btn btn-success mt-3" style="display: none;" onclick="savePrediction()">Save Prediction</button>
+          {% endif %}
+        </div>
+
+        <!-- New Section for Stock Price Prediction Chart -->
+        <div class="mt-4">
+          <canvas id="predictionGraph"></canvas> <!-- Canvas for Chart.js -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="confirmation-dialog" id="confirmationDialog" style="display: none;">
+    <div class="confirmation-dialog-content">
+      <p>Are you sure you want to log out?</p>
+      <button id="confirmLogout" class="btn btn-danger">Yes, Logout</button>
+      <button id="cancelLogout" class="btn btn-secondary">Cancel</button>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="../static/script.js"></script>
+
+  <!-- Script to display the prediction chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Assuming 'results' is the response from your Flask API
+    const tableData = results.table_data;
+  
+    const tableBody = document.querySelector('#predictionTable tbody');
+    tableBody.innerHTML = '';  // Clear any previous data
+  
+    tableData.forEach(row => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${row.trading_day}</td>
+        <td>${row.predicted_close}</td>
+        <td>${row.previous_ltp !== null ? row.previous_ltp : 'N/A'}</td>
+      `;
+      tableBody.appendChild(tr);
+    });
+  </script>
+</body>
+</html>
