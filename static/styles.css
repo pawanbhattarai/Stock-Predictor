@@ -323,3 +323,200 @@ body {
   background-color: #6c757d; /* Gray background for 'Cancel' */
   color: #fff;
 }
+/* The Modal (background) */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 0%;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 40%;
+}
+
+/* Form Inputs */
+.modal-content input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Submit and Cancel buttons */
+.modal-content button {
+  background-color: #4CAF50; /* Green */
+  color: white;
+  padding: 10px 20px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-content button[type="button"] {
+  background-color: #f44336; /* Red */
+}
+
+/* Change background color on hover */
+.modal-content button:hover {
+  opacity: 0.9;
+}
+
+/* Unique styling for the Registered Users table */
+#registeredUsersTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+#registeredUsersTable thead {
+  background-color: #f8f9fa; /* Light gray background */
+}
+
+#registeredUsersTable th {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 2px solid #dee2e6; /* Darker border */
+}
+
+#registeredUsersTable tbody tr {
+  transition: background-color 0.2s; /* Smooth transition for hover effect */
+}
+
+#registeredUsersTable tbody tr:nth-child(even) {
+  background-color: #f2f2f2; /* Light gray for even rows */
+}
+
+#registeredUsersTable tbody tr:hover {
+  background-color: #e9ecef; /* Slightly darker gray on hover */
+}
+
+#registeredUsersTable td {
+  padding: 10px;
+  border-bottom: 1px solid #dee2e6; /* Border for table cells */
+}
+
+/* Button styling for actions */
+#registeredUsersTable button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#registeredUsersTable button:hover {
+  opacity: 0.8; /* Slightly dim on hover */
+}
+
+/* Optional: styling for the action buttons */
+#registeredUsersTable .btn-danger {
+  background-color: #dc3545; /* Bootstrap danger color */
+  color: white;
+}
+
+#registeredUsersTable .btn-danger:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+.portfolio-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold; /* Bold for heading */
+  padding: 5px 0;
+  border-bottom: 1px solid #ccc; /* Optional: A line to separate header from items */
+}
+
+.portfolio-header span {
+  width: 25%; /* Ensure each heading takes up equal space */
+  text-align: center; /* Center the text in each column */
+}
+
+.portfolio-stock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.portfolio-stock span {
+  width: 25%; /* Ensure each span takes up equal space */
+  text-align: center; /* Center text in each column */
+}
+
+.portfolio-stock button {
+  width: 30px; /* Define a fixed width for the delete button */
+  text-align: center;
+}
+
+.left-sidebar {
+  position: fixed;
+  left: 0;
+margin-top: 5%;
+  width: 250px;
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.right-sidebar {
+  position: fixed;
+  right: 0;
+  top: 10%;
+  width: 350px;
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-left: 1px solid #ddd;
+}
+
+.listedStocks {
+  max-height: 550px;
+  overflow-y: auto;
+  overflow-x: auto;
+
+}
+
+.listedStocks table {
+  width: 100%;
+  table-layout: fixed; /* Ensure columns have a fixed width */
+  border-collapse: collapse;
+}
+
+.listedStocks th, .listedStocks td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.listedStocks th:nth-child(1),
+.listedStocks td:nth-child(1) {
+  width: 70px; /* Force fixed width for Symbol */
+  min-width: 70px;
+  max-width: 70px;
+ text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.listedStocks th:nth-child(2),
+.listedStocks td:nth-child(2) {
+  width: auto; /* Automatically adjust the width for the Name column */
+  /* overflow: hidden; */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.listedStocks tbody tr:hover {
+  background-color: #f1f1f1;
+}
+

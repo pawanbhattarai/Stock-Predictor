@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -7,6 +8,7 @@
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <link href="/static/styles.css" rel="stylesheet">
 </head>
+
 <body>
   <div class="container-fluid">
     <div class="row">
@@ -18,11 +20,13 @@
           <ul class="navbar-nav ml-auto">
             <a class="navbar-brand" href="">Home</a>
             {% if user_logged_in %}
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Profile</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" id="profileLink">Profile</a>
+            </li>
             <li class="nav-item"><a class="nav-link" href="#" id="logoutLink">Logout</a></li>
             {% else %}
-            <li class="nav-item"><a class="nav-link" href="#" id="loginLink">Log In</a></li>
-            {% endif %}
+            <a class="nav-link" href="/login" id="loginLink">Log In</a>
+              {% endif %}
           </ul>
         </div>
       </nav>
@@ -42,14 +46,17 @@
         <form id="predictionForm" method="post">
           <div class="form-group">
             <label for="stock_symbol">Stock Symbol:</label>
-            <input type="text" class="form-control" id="stock_symbol" name="stock_symbol" required>
-            <div class="invalid-feedback">Please enter a valid stock symbol.</div>
+            <select class="form-control" id="stock_symbol" name="stock_symbol" required>
+              <!-- Options will be populated here -->
+            </select>
+            <div class="invalid-feedback">Please select a stock symbol.</div>
           </div>
           <div class="form-group" id="buttons">
             <button type="button" class="btn btn-primary" id="predict_3_days">Predict Next 3 Days</button>
             <button type="button" class="btn btn-primary" id="predict_7_days">Predict Next 7 Days</button>
           </div>
         </form>
+        
         <div class="loading-spinner text-center">
           <div class="spinner-border" role="status">
             <span class="sr-only">Loading...</span>
@@ -70,7 +77,8 @@
             </table>
           </div>
           {% if user_logged_in %}
-          <button id="savePredictionButton" type="button" class="btn btn-success mt-3" style="display: none;" onclick="savePrediction()">Save Prediction</button>
+          <button id="savePredictionButton" type="button" class="btn btn-success mt-3" style="display: none;"
+            onclick="savePrediction()">Save Prediction</button>
           {% endif %}
         </div>
 
@@ -92,17 +100,18 @@
 
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script src="../static/script.js"></script>
+  <script src="../static/script.js"></script>  <!-- Remove the extra space -->
+  <!-- <script src="../static/profile.js" defer></script> -->
 
   <!-- Script to display the prediction chart -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     // Assuming 'results' is the response from your Flask API
     const tableData = results.table_data;
-  
+
     const tableBody = document.querySelector('#predictionTable tbody');
     tableBody.innerHTML = '';  // Clear any previous data
-  
+
     tableData.forEach(row => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
@@ -114,4 +123,5 @@
     });
   </script>
 </body>
+
 </html>

@@ -10,7 +10,17 @@ $(document).ready(function () {
     const message = $('<p>').text('You can only predict one stock without logging in. Please log in to access additional features and make more predictions.');
     const loginButton = $('<button>').attr('id', 'loginButton').text('Login');
     const cancelButton = $('<button>').attr('id', 'cancelButton').text('Cancel');
+    const profileLink = document.getElementById('profileLink');
+    if (profileLink) {
+        profileLink.addEventListener('click', function (event) {
+            event.preventDefault();
+            window.location.href = "/redirect_to_profile";  // Redirect to the backend route
+        });
+    } else {
+        console.error('profileLink element not found');
+    }
 
+    
     popupContent.append(title, message, loginButton, cancelButton);
     popup.append(popupContent);
     $('body').append(popup);
@@ -34,9 +44,15 @@ $(document).ready(function () {
                 if (response.saved_predictions && response.saved_predictions.length > 0) {
                     response.saved_predictions.forEach(function (prediction) {
                         $('.saved-predictions').append(`
-                            <div>
-                                <a href="#" class="saved-prediction" data-id="${prediction.p_id}">${prediction.symbol} - ${new Date(prediction.created_at).toLocaleDateString()}</a>
-                            </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="#" class="saved-prediction" data-id="${prediction.p_id}">
+                                ${prediction.symbol} - ${new Date(prediction.created_at).toLocaleDateString()}
+                            </a>
+                            <button class="btn btn-danger" onclick="deletePrediction(${prediction.p_id})" title="Delete" style="width: 15px; height: 15px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                                x
+                            </button>
+
+                        </div>
                         `);
                     });
                 } else {
@@ -55,6 +71,7 @@ $(document).ready(function () {
     $(document).on('click', '.saved-prediction', function (e) {
         e.preventDefault();
         const p_id = $(this).data('id');
+
         
         $.ajax({
             url: `/saved_prediction/${p_id}`,
@@ -66,7 +83,11 @@ $(document).ready(function () {
                 if (prediction) {
                     prediction.forEach(function (item) {
                         $('#predictionTable').append(`
-                            <tr><td>${item.day}</td><td>${item.predicted_close}</td></tr>
+                            <tr>
+                            <td>${item.day}</td>
+                            <td>${item.predicted_close}</td>
+
+                            </tr>
                         `);
                     });
                     $('#savePredictionButton').hide(); // Hide Save button if the data is already saved
@@ -295,7 +316,8 @@ $(document).ready(function () {
             }
         });
     });
-
+    
+    
     // Handle login button click in popup
     $('#loginButton').on('click', function () {
         window.location.href = '/login'; // Redirect to login page
@@ -352,15 +374,15 @@ $(document).ready(function () {
     // Event listener for login form submission
     loginForm.on('submit', function (event) {
         event.preventDefault(); // Prevent the default form submission
-
+    
         const loginUsername = $('#loginUsername').val().trim();
         const loginPassword = $('#loginPassword').val().trim();
-
+    
         if (loginUsername === '' || loginPassword === '') {
             alert('Please fill in all fields.');
             return;
         }
-
+    
         // Send the form data using fetch
         fetch('/login', {
             method: 'POST',
@@ -369,19 +391,22 @@ $(document).ready(function () {
             },
             body: JSON.stringify({ username: loginUsername, password: loginPassword })
         })
-            .then(response => {
-                if (response.ok) {
-
-                    window.location.href = '/'; // Redirect to the home page
-                } else {
-                    return response.text().then(text => Promise.reject(text));
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
-            });
+        .then(response => response.json())
+        .then(data => {
+            if (data.redirect_url) {
+                // Redirect to the URL returned by the Flask backend
+                window.location.href = data.redirect_url;
+            } else if (data.error) {
+                // Handle errors
+                alert(data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        });
     });
+    
 
     // Event listener for "Register?" link
     toggleRegister.on('click', function (event) {
@@ -455,8 +480,62 @@ $(document).ready(function () {
                 // alert(An Error occurred: ${ error.message }); // Provide detailed error message
             });
     });
+
+    
     // Close confirmation dialog if "Cancel" button is clicked
     $('#cancelLogout').on('click', function () {
         $('#confirmationDialog').hide();
     });
+
 });
+function loadPortfolio() {
+    console.log("Fetching portfolio...");
+    fetch('/all_stocks') // Fetch from the backend
+        .then(response => response.json())
+        .then(data => {
+            console.log("Portfolio fetched:", data);
+            
+            const stockSelect = document.getElementById('stock_symbol');
+            stockSelect.innerHTML = '';  // Clear existing options
+
+            // Check if listed_stocks array is returned
+            if (data.success && data.listed_stocks.length > 0) {
+                data.listed_stocks.forEach(stock => {
+                    const option = document.createElement('option');
+                    option.value = stock.Symbol;  // Stock symbol
+                    option.textContent = stock.Symbol;  // Display stock symbol
+                    stockSelect.appendChild(option);
+                });
+            } else {
+                const noStockOption = document.createElement('option');
+                noStockOption.textContent = "No stocks available";
+                noStockOption.disabled = true;
+                stockSelect.appendChild(noStockOption);
+            }
+        })
+        .catch(error => console.error('Error fetching portfolio:', error));
+}
+
+
+// Call loadPortfolio to populate dropdown on page load
+document.addEventListener('DOMContentLoaded', loadPortfolio);
+
+function deletePrediction(predictionId) {
+    if (confirm('Are you sure you want to delete this prediction?')) {
+        $.ajax({
+            url: `/delete_prediction/${predictionId}`,
+            type: 'DELETE',
+            success: function (response) {
+                if (response.success) {
+                    alert('Prediction deleted successfully.');
+                    location.reload();
+                } else {
+                    alert('Error deleting prediction: ' + response.error);
+                }
+            },
+            error: function () {
+                alert('Error deleting prediction.');
+            }
+        });
+    }
+}

@@ -9,12 +9,74 @@ from webdriver_manager.chrome import ChromeDriverManager
 import os
 import time
 
+def scrape_company_symbols():
+    url = "https://nepsealpha.com/traded-stocks"
+
+    # Setup ChromeDriver using the Service class with headless options
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--disable-gpu")  # Disable GPU for better performance
+    chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
+    chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
+    # chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+    # chrome_options.add_argument("--window-size=1920,1080")
+    time.sleep(7)
+
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+
+    driver.get(url)
+    wait = WebDriverWait(driver, 20)
+
+    all_symbols = []
+    
+    try:
+        while True:  # Loop through each page
+            time.sleep(2)  # Give some time for the page to load
+
+            # Scrape the stock symbols from the current page
+            rows = driver.find_elements(By.CSS_SELECTOR, '#DataTables_Table_0 tbody tr')
+            if len(rows) > 0:
+                print(f"Found {len(rows)} stocks on this page.")
+                for row in rows:
+                    symbol = row.find_elements(By.TAG_NAME, 'td')[0].text.strip()
+                    company_name = row.find_elements(By.TAG_NAME, 'td')[1].text.strip()
+
+                    print(f"Found stock symbol: {symbol}, Name: {company_name}")
+                    all_symbols.append((symbol, company_name))
+            else:
+                print("No stocks found on this page.")
+            
+            # Try to locate the 'Next' button
+            try:
+                next_button = driver.find_element(By.XPATH, '//a[contains(@class, "paginate_button") and text()="Next"]')
+            except Exception as e:
+                print("Next button not found. Stopping pagination.")
+                break
+            
+            # If 'Next' button is disabled or not clickable, break the loop
+            if 'disabled' in next_button.get_attribute('class'):
+                print("Reached the last page.")
+                break
+            
+            # Click the 'Next' button to go to the next page
+            driver.execute_script("arguments[0].click();", next_button)
+            time.sleep(3)  # Give the next page some time to load
+
+    except Exception as e:
+        print(f"Error while scraping: {e}")
+    finally:
+        driver.quit()
+
+    print(f"Total symbols found: {len(all_symbols)}")
+    print("Scraped Symbols:", all_symbols)
+    return all_symbols
+
 def scrape_merolagani_data(symbol):
     url = f"https://merolagani.com/CompanyDetail.aspx?symbol={symbol}#0"
 
     # Setup ChromeDriver using the Service class with headless options
     chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+    # chrome_options.add_argument("--headless")  # Run Chrome in headless mode
     chrome_options.add_argument("--disable-gpu")  # Disable GPU for better performance in headless mode
     chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
     chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
